@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <title>Home</title>
+</head>
+<body>
+    <div class="jumbotron">
+        <h1>Welcome! {{ username }}</h1>
+        <div class="navbar">
+            <a href = "/logout" class = "btn btn-warning ml-auto">Log Out</a>
+        </div>
+        <div style="display: inline-block">
+            <h4>Send Message</h4>
+            {% for user in all_users %}
+                {% if user['id'] != logged_user %}
+                    <p>{{user['username']}}</p>
+                    <form action = "/create_message" method = 'post'>
+                        <textarea name = "message"></textarea>
+                        <input type = "hidden" name = "receiving_id" value = {{ user['id'] }}>
+                        <br>
+                        <input type = "submit" value = "Send" class="btn btn-primary">
+                    </form>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div style="display: inline-block;margin:0px 0px 0px 500px;vertical-align:top;border: 3px solid black;padding: 10px">
+            <h4>Messages</h4>
+            {% for number in message_num %}
+                <p>You have {{number['NumOfMessages']}} message(s)</p>
+            {% endfor %}
+            {% for message in user_messages %}
+                <form action = '/delete' method = 'post'>
+                    <h5>{{ message['message'] }}</h5>
+                    <p style = "color: blue">Received at: {{ message['created_at'] }} From: {{ message['sender_username'] }}</p>
+                    <input type = "hidden" name = "message_id" value = {{ message['id'] }}>
+                    <input type = "submit" value = "Delete message" class="btn btn-danger">
+                </form>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
